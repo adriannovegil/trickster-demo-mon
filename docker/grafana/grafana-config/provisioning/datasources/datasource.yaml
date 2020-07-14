@@ -1,0 +1,33 @@
+# config file version
+apiVersion: 1
+
+datasources:
+# InfluxDB
+- name: influx-direct
+  type: influxdb
+  access: proxy
+  orgId: 1
+  url: http://influxdb-server:8086
+  password:
+  user:
+  database: inspectit
+  basicAuth:
+  basicAuthUser:
+  basicAuthPassword:
+  withCredentials:
+  isDefault:
+  secureJsonData:
+    tlsCACert: "..."
+    tlsClientCert: "..."
+    tlsClientKey: "..."
+  version: 1
+  editable: false
+# Prometheus
+- name: prom-direct
+  type: prometheus
+  access: proxy
+  orgId: 1
+  uid: ds_prom_direct
+  url: http://prometheus:9090
+  version: 1
+  editable: true
