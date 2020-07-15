@@ -28,7 +28,12 @@ scrape_configs:
     static_configs:
     - targets: ['localhost:9090']
 
-  - job_name: 'trickster'
+  - job_name: cadvisor
+    scrape_interval: 5s
     static_configs:
-    - targets: ['trickster:8481']
+    - targets:
+      - cadvisor:8080
 
+  #- job_name: 'trickster'
+  #  static_configs:
+  #  - targets: ['trickster:8481']
