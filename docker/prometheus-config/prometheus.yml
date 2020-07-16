@@ -21,19 +21,30 @@ rule_files:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
-
+  scrape_interval: 10s
+  scrape_timeout: 5s
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
-
     static_configs:
     - targets: ['localhost:9090']
+      labels:
+          host: 'host1'
+
+  - job_name: 'node'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets: ['nodeexporter:9100']
+        labels:
+          host: 'host1'
 
   - job_name: cadvisor
-    scrape_interval: 5s
+    scrape_interval: 10s
+    scrape_timeout: 5s
     static_configs:
     - targets:
       - cadvisor:8080
 
-  #- job_name: 'trickster'
-  #  static_configs:
-  #  - targets: ['trickster:8481']
+  - job_name: 'trickster'
+    static_configs:
+    - targets: ['trickster:8481']

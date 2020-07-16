@@ -10,7 +10,7 @@ datasources:
   url: http://influxdb-server:8086
   password:
   user:
-  database: inspectit
+  database: _internal
   basicAuth:
   basicAuthUser:
   basicAuthPassword:

@@ -3,24 +3,27 @@ services:
 
   # Metrics
   # ============================================================================
-  # Prometheus
-  prometheus:
-    image: prom/prometheus:v2.17.2
-    container_name: trickster-prometheus-mon
-    restart: always
+  # Node exporter
+  nodeexporter:
+    image: prom/node-exporter:latest
+    user: root
+    privileged: true
+    labels:
+      container_group: monitoring
     volumes:
-      - ./docker/prometheus-config:/etc/prometheus
+      - /:/rootfs:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    depends_on:
-      - cadvisor
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
     networks:
+      - trk-ex-front-tier
       - trk-ex-back-tier
     ports:
-      - 9090:9090
+      - '9100:9100'
 
   # cadvisor
   cadvisor:
@@ -36,6 +39,27 @@ services:
       - trk-ex-back-tier
     ports:
       - 8181:8080
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:v2.17.2
+    container_name: trickster-prometheus-mon
+    restart: always
+    volumes:
+      - ./docker/prometheus-config:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.path=/prometheus'
+      - "--storage.tsdb.retention=744h"
+    depends_on:
+      - cadvisor
+    networks:
+      - trk-ex-back-tier
+    ports:
+      - 9090:9090
+
 
   # Grafana
   grafana-mon:
