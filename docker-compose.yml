@@ -68,6 +68,7 @@ services:
     restart: always
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
     volumes:
       - ./docker/grafana/grafana-config:/etc/grafana
       - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
