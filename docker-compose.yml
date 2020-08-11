@@ -76,7 +76,7 @@ services:
       - trk-ex-front-tier
       - trk-ex-back-tier
     ports:
-      - 3001:3000
+      - 3002:3000
 
 networks:
   trk-ex-front-tier:
